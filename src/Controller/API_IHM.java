@@ -328,7 +328,27 @@ public class API_IHM {
             e.printStackTrace();
         }
     }
+    /********************************************************************************************************************/
+    /**    todo                                                                                                                */
+    /**this function sends the necessary arguments to the simulator to request a file with the contents of a register	*/
+    /**                                initialization of the communication interface										*/
+    /**the identifier of the operation to be performed and the identifier of the register are sent over the channel		*/
+    /**                                                                                                                    */
+    /********************************************************************************************************************/
+    public void sendShutdown(int Opcode) {
+        try {
+            String msg = Opcode + "\n";
+            outputLine.write(msg);
+            outputLine.flush();
 
+            System.out.println("Sending shutdown message " + msg);
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     /********************************************************************************************************************/
     /**                                                                                                                    */
     /**                        this function chooses what action to take according to the operation asked					*/
@@ -342,6 +362,9 @@ public class API_IHM {
         a = new answer();
         System.out.println("API sender called ");
         switch (input) {
+            case 0 : //quit
+                sendShutdown(input);
+                break;
             case 1:
                 loadModuleSimul(input, NameOrPath);
                 break;

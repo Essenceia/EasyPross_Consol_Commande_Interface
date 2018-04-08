@@ -43,6 +43,9 @@ public class Commnade_Line {
             opcode = Integer.parseInt(args[OPCODE_INDEX]);
             System.out.println("opcode recived ::" + opcode);
             switch (opcode) {
+                case 0: //shutdown message
+                    api.APISender(opcode,"",0,"","",null,null);
+                    break;
                 case 1:
                     api.APISender(opcode, "", 0, args[MODULE_NAME], "", null, null);
                     break;

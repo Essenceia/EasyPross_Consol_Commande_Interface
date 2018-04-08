@@ -33,7 +33,13 @@ public class Main {
                        case "--help":
                            cl.help();
                            break;
-                       case "-q": case "--quit":exit =1 ;break;
+                       case "-q": case "--quit":exit =1 ;
+                       //re-creating the behaviour of the shutdown commande
+                           cl_args =new String[2];
+                           cl_args[0] = "-o";
+                           cl_args[1] = "0";
+                           cl.opcode(cl_args);
+                           break;
                        default:
                            System.out.println("Unknown commande type :" +
                                    "-h or --help for help and -o or --opcode to enter an opcode");
