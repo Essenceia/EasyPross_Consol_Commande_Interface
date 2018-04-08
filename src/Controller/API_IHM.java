@@ -76,12 +76,12 @@ public class API_IHM {
     public void receive() {
         System.out.println("Waiting for response from client");
         try {
-            String nvmsg[] ;
+            String nvmsg[];
             String tmp;
-            Vector<Integer> changes ;
+            Vector<Integer> changes;
             int check;
             tmp = inputLine.readLine();
-            System.out.println("Recived :: "+tmp);
+            System.out.println("Recived :: " + tmp);
             nvmsg = tmp.split(" ");
 
             int Opcode = Integer.parseInt(nvmsg[0]);
@@ -92,9 +92,11 @@ public class API_IHM {
                     System.out.print(" loaded module " + path);
                     break;
 
-                case 2: case 4: case 5:
+                case 2:
+                case 4:
+                case 5:
                     check = Integer.parseInt(nvmsg[1]);
-                    System.out.println("Opcode result "+Opcode+" "+check);
+                    System.out.println("Opcode result " + Opcode + " " + check);
                     a.check = check;
 
                     break;
@@ -106,12 +108,24 @@ public class API_IHM {
 
                     break;
 
-               case 6:
+                case 6:
                     path = nvmsg[1];
                     a.path = path;
-                    System.out.println("ASKFILEDTA path to file "+path);
+                    System.out.println("ASKFILEDTA path to file " + path);
 
                     break;
+
+                case 7:
+                    System.out.println("LOADDARAFIEL #" + nvmsg[1] + " " + nvmsg[2] + " " + nvmsg[3]);
+                    a.path = nvmsg[2];
+                    a.id = Integer.parseInt(nvmsg[1]);
+                    a.check = Integer.parseInt((nvmsg[3]));
+
+                    break;
+                case 8:
+                    System.out.println("DEBUGXMLSAVE "+nvmsg[1]);
+                    break;
+
 
                 default:
                     System.out.println("Error : undefined opcode " + Opcode);
@@ -136,7 +150,7 @@ public class API_IHM {
     public void loadModuleSimul(int Opcode, String ModuleName) {
         try {
 
-            outputLine.write(Opcode + " " + ModuleName+"\n");
+            outputLine.write(Opcode + " " + ModuleName + "\n");
             //outputLine.newLine();
             System.out.println("Load module sent " + outputLine.toString());
             outputLine.flush();
@@ -150,6 +164,20 @@ public class API_IHM {
         }
     }
 
+    public void changeDataRegisterSimul(int Opcode, String NameOrPath, Integer Objcode) {
+        try {
+            String msg = Opcode + " " + Objcode.toString() + " " + NameOrPath + "\n";
+            outputLine.write(msg);
+            outputLine.flush();
+            System.out.println("Load file " + NameOrPath + "to node with id " + Objcode + "\n" +
+                    "message sent ::" + msg);
+            receive();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     /********************************************************************************************************************/
     /**                                                                                                                    */
     /**                this function sends the necessary arguments to the simulator to launch the simulation				*/
@@ -157,19 +185,19 @@ public class API_IHM {
     /**                        the identifier of the operation to be performed is sent over the channel					*/
     /**                                                                                                                    */
     /********************************************************************************************************************/
-	public void simulSimul() {
-		try {
-          System.out.println("Sending simulation commande to server");
-			outputLine.write(2+"\n");
-			outputLine.flush();
+    public void simulSimul() {
+        try {
+            System.out.println("Sending simulation commande to server");
+            outputLine.write(2 + "\n");
+            outputLine.flush();
 
-			receive();
-		}catch(UnknownHostException e) {
-			e.printStackTrace();
-		}catch(IOException e) {
-			e.printStackTrace();
-		}
-	}
+            receive();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /********************************************************************************************************************/
     /**                                                                                                                    */
@@ -178,23 +206,22 @@ public class API_IHM {
     /**    the identifier of the operation to be performed and the identifier of the wire are sent over the channel		*/
     /**                                                                                                                    */
     /********************************************************************************************************************/
-	
-	
-	public void getDataItemSimul(Integer Opcode, Vector<Integer> Idwire) {
-		try {
-		    String nvmsg = Opcode.toString()+" ";
-            nvmsg+=Helper_Data_Handler.creatIdString(Idwire);
-            System.out.println("Message sent to simulator ::"+nvmsg);
 
-			outputLine.write(nvmsg+"\n");
+
+    public void getDataItemSimul(Integer Opcode, Vector<Integer> Idwire) {
+        try {
+            String nvmsg = Opcode.toString() + " ";
+            nvmsg += Helper_Data_Handler.creatIdString(Idwire);
+            System.out.println("Message sent to simulator ::" + nvmsg);
+
+            outputLine.write(nvmsg + "\n");
             outputLine.flush();
 
-			receive();
-		}catch(IOException e) {
-			e.printStackTrace();
-		}
-	}
-
+            receive();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     /********************************************************************************************************************/
@@ -205,34 +232,34 @@ public class API_IHM {
     /**                                    and the new data are sent over the channel										*/
     /**                                                                                                                    */
     /********************************************************************************************************************/
-	
-	
-	private void changeDataItemSimul(int Opcode,Vector<Data_Tuple> newData) {
-		try {
-		    String msg = Opcode+" ";
-		    int i = 0;
-            for (Data_Tuple data:newData
-                 ) {
-                msg += data.getId()+":"+data.getStringValues();
-                if(i != newData.size()-1)msg+=",";
+
+
+    private void changeDataItemSimul(int Opcode, Vector<Data_Tuple> newData) {
+        try {
+            String msg = Opcode + " ";
+            int i = 0;
+            for (Data_Tuple data : newData
+                    ) {
+                msg += data.getId() + ":" + data.getStringValues();
+                if (i != newData.size() - 1) msg += ",";
                 i++;
             }
-            msg+="\n";
-				
+            msg += "\n";
 
-			outputLine.write(msg);
-			outputLine.flush();
-			System.out.println("changeDataItemSimul sent ::"+msg);
 
-			receive();
-		}catch (UnknownHostException e) {
-			
-			e.printStackTrace();
-		}catch (IOException e) {
-			
-			e.printStackTrace();
-		}
-	}
+            outputLine.write(msg);
+            outputLine.flush();
+            System.out.println("changeDataItemSimul sent ::" + msg);
+
+            receive();
+        } catch (UnknownHostException e) {
+
+            e.printStackTrace();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+    }
     /********************************************************************************************************************/
     /**                                                                                                                    */
     /**            this function sends the necessary arguments to the simulator to reset the module settings				*/
@@ -240,21 +267,21 @@ public class API_IHM {
     /**                    the identifier of the operation to be performed is sent over the channel						*/
     /**                                                                                                                    */
     /********************************************************************************************************************/
-	
-	
-	public void resetSimul(int Opcode){
-		try {
 
-			outputLine.write(Opcode+"\n");
-			outputLine.flush();
 
-			receive();
-		}catch(UnknownHostException e) {
-			e.printStackTrace();
-		}catch(IOException e) {
-			e.printStackTrace();
-		}
-	}
+    public void resetSimul(int Opcode) {
+        try {
+
+            outputLine.write(Opcode + "\n");
+            outputLine.flush();
+
+            receive();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /********************************************************************************************************************/
     /**                                                                                                                    */
@@ -263,21 +290,45 @@ public class API_IHM {
     /**the identifier of the operation to be performed and the identifier of the register are sent over the channel		*/
     /**                                                                                                                    */
     /********************************************************************************************************************/
-	public  void getDataRegisterSimul(int Opcode, int IdRegister){
-		try {
-            String msg =Opcode+" "+IdRegister+"\n";
-			outputLine.write(msg);
-			outputLine.flush();
+    public void getDataRegisterSimul(int Opcode, int IdRegister) {
+        try {
+            String msg = Opcode + " " + IdRegister + "\n";
+            outputLine.write(msg);
+            outputLine.flush();
 
-			System.out.println("Get data register simulation message sent "+msg);
+            System.out.println("Get data register simulation message sent " + msg);
 
-			receive();
-		}catch(UnknownHostException e) {
-			e.printStackTrace();
-		}catch(IOException e) {
-			e.printStackTrace();
-		}
-	}
+            receive();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /********************************************************************************************************************/
+    /**                                                                                                                    */
+    /**this function sends the necessary arguments to the simulator to request a file with the contents of a register	*/
+    /**                                initialization of the communication interface										*/
+    /**the identifier of the operation to be performed and the identifier of the register are sent over the channel		*/
+    /**                                                                                                                    */
+    /********************************************************************************************************************/
+    public void debugSaveCurrentXML(int Opcode, String path) {
+        try {
+            String msg = Opcode + " " + path + "\n";
+            outputLine.write(msg);
+            outputLine.flush();
+
+            System.out.println("Debug save current xml to file message sent " + msg);
+
+            receive();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /********************************************************************************************************************/
     /**                                                                                                                    */
     /**                        this function chooses what action to take according to the operation asked					*/
@@ -287,31 +338,41 @@ public class API_IHM {
     /********************************************************************************************************************/
 
 
-    public void APISender(int input, String target, int Objcode, String NameOrPath, String AbsolutePath, Vector<Integer> NewValue,Vector<Data_Tuple> ToSet) {
+    public void APISender(int input, String target, int Objcode, String NameOrPath, String AbsolutePath, Vector<Integer> NewValue, Vector<Data_Tuple> ToSet) {
         a = new answer();
         System.out.println("API sender called ");
         switch (input) {
             case 1:
                 loadModuleSimul(input, NameOrPath);
                 break;
-			
-			case 2: 	simulSimul();
-					break;
-			
-			case 3: getDataItemSimul(input,NewValue);
-					break;
-			
-			case 4: 	changeDataItemSimul(input,ToSet);
-					break;
-			
-			case 5: resetSimul(input);
-					break;
-			
-			case 6: getDataRegisterSimul(input,Objcode);
-					break;
-			/*
-			case 7: changeDataRegisterSimul(input,NameOrPath,AbsolutePath,Objcode);
-					break;*/
+
+            case 2:
+                simulSimul();
+                break;
+
+            case 3:
+                getDataItemSimul(input, NewValue);
+                break;
+
+            case 4:
+                changeDataItemSimul(input, ToSet);
+                break;
+
+            case 5:
+                resetSimul(input);
+                break;
+
+            case 6:
+                getDataRegisterSimul(input, Objcode);
+                break;
+
+            case 7:
+                changeDataRegisterSimul(input, NameOrPath, Objcode);
+                break;
+
+            case 8 : //ask to save current graph to xml
+                debugSaveCurrentXML(input,NameOrPath);
+                break;
 
             default:
                 break;
