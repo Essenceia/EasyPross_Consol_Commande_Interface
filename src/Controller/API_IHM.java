@@ -6,8 +6,8 @@ import java.net.UnknownHostException;
 import java.util.Vector;
 
 public class API_IHM {
-    final int SENDER_PORT = 2014;
-    final int RECIVER_PORT = 2015;
+    final int SENDER_PORT = 2016;
+    final int RECIVER_PORT = 2017;
 
     static java.net.Socket c_write;//client socket
     static java.net.Socket c_read;//client socket
@@ -20,7 +20,7 @@ public class API_IHM {
 
     public API_IHM() {
         try {
-            System.out.println("Trying to open new sockets");
+            System.out.println("Trying to open new sockets: waiting for simulator to be launched");
             s_write = new ServerSocket(SENDER_PORT);
             s_read = new ServerSocket(RECIVER_PORT);
             c_write = s_write.accept();
@@ -159,7 +159,7 @@ public class API_IHM {
     /********************************************************************************************************************/
 	public void simulSimul() {
 		try {
-            System.out.println("Sending simulation commande to server");
+          System.out.println("Sending simulation commande to server");
 			outputLine.write(2+"\n");
 			outputLine.flush();
 

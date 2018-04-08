@@ -17,7 +17,6 @@ public class Main {
 	// write your code here
         while(exit == 0){
            try{
-               cl.help();
                System.out.println("Please enter commande :");
                s =br.readLine();
                cl_args = s.split(" ");
