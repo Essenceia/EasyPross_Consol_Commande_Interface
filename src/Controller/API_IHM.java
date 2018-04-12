@@ -1,8 +1,20 @@
 package Controller;
 
+import java.io.FileReader;
+import java.io.IOException;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+
+import org.jdom2.Element;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.UnknownHostException;
+import java.util.List;
 import java.util.Vector;
 
 public class API_IHM {
@@ -74,7 +86,7 @@ public class API_IHM {
     /********************************************************************************************************************/
 
     public void receive() {
-        System.out.println("Waiting for response from client");
+        System.out.println(Helper_Data_Handler.color1("Waiting for response from client"));
         try {
             String nvmsg[];
             String tmp;
@@ -89,7 +101,8 @@ public class API_IHM {
                 case 1:
                     String path = nvmsg[1];
                     a.path = path;
-                    System.out.print(" loaded module " + path);
+                    System.out.println("Loaded module " + Helper_Data_Handler.color2(path));
+                    loadView(a.path);
                     break;
 
                 case 2:
@@ -102,7 +115,7 @@ public class API_IHM {
                     break;
 
                 case 3:
-                    //parse changed values
+                    //parse changed value
                     Helper_Data_Handler.printDataTupleArray(
                             Helper_Data_Handler.parseIdAndDataFromString(nvmsg[1]));
 
@@ -402,6 +415,27 @@ public class API_IHM {
         }
     }
 
+    private void loadView(String file){
+        DocumentBuilderFactory dbFactory;
+        List list;
+        String diagrame="";
+
+        try {
+            dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(file);
+
+            NodeList nList = doc.getElementsByTagName("view");
+            if(nList.getLength()>0){
+                diagrame= nList.item(0).getTextContent();
+                System.out.println(diagrame);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
     protected void finalize() throws Throwable {
         try {
             s_write.close();        // close soket

@@ -8,26 +8,42 @@ public class Commnade_Line {
     private API_IHM api;
 
     public Commnade_Line() {
+
         help();
         api = new API_IHM();
 
     }
 
+    public void onLoad() {
+        String s =
+                "oooooooooooo                                ooooooooo.                                        \n" +
+                        "`888'     `8                                `888   `Y88.                                      \n" +
+                        " 888          .oooo.    .oooo.o oooo    ooo  888   .d88' oooo d8b  .ooooo.   .oooo.o  .oooo.o \n" +
+                        " 888oooo8    `P  )88b  d88(  \"8  `88.  .8'   888ooo88P'  `888\"\"8P d88' `88b d88(  \"8 d88(  \"8 \n" +
+                        " 888    \"     .oP\"888  `\"Y88b.    `88..8'    888          888     888   888 `\"Y88b.  `\"Y88b.  \n" +
+                        " 888       o d8(  888  o.  )88b    `888'     888          888     888   888 o.  )88b o.  )88b \n" +
+                        "o888ooooood8 `Y888\"\"8o 8\"\"888P'     .8'     o888o        d888b    `Y8bod8P' 8\"\"888P' 8\"\"888P' \n" +
+                        "                                .o..P'                                                        \n" +
+                        "                                `Y8P'                                                         \n" +
+                        "                                                                                              "    ;
+        System.out.println(s);
+    }
     public void help() {
+        onLoad();
         String s = "\033[0;33m";
         s += "List of commands :\n";
         s += "'-q' exit , usage :[-q] or [--quit]\n";
         s += "'-h' help , usage : [-h] or [--help]\n";
         s+= "'-o' Enter a API commande see all possible sequences :\n\n";
-        s += "'1' load module , usage : [-o 1 <ModuleName>]\n";
-        s += "'2' simulate for 1 tick, usage : [-o 2]\n";
-        s += "'3' get data on wire, usage : [-o 3 <id> <id> <id> ...]\n";
-        s += "'4' set data on wire , usage : [-o 4 <id>:<data>,<id>:<data>,<id>:<data>, ...]\n";
-        s += "'5' reset data of graph to default values , usage : [-o 5]\n";
-        s += "'6' get absolute path to register file , usage : [-o 6 <id>]\n";
-        s += "'7' \033[0;31mUNSTABLE\033[0;33m load file to register file , usage : [-o 7 <id> <path to new data>]\n";
+        s += Helper_Data_Handler.color3("'1'")+"load module , usage : [-o 1 <ModuleName>]\n";
+        s += Helper_Data_Handler.color3("'2'")+" simulate for 1 tick, usage : [-o 2]\n";
+        s += Helper_Data_Handler.color3("'3'")+" get data on wire, usage : [-o 3 <id> <id> <id> ...]\n";
+        s += Helper_Data_Handler.color3("'4'")+" set data on wire , usage : [-o 4 <id>:<data>,<id>:<data>,<id>:<data>, ...]\n";
+        s += Helper_Data_Handler.color3("'5'")+"reset data of graph to default values , usage : [-o 5]\n";
+        s += Helper_Data_Handler.color3("'6'")+" get absolute path to register file , usage : [-o 6 <id>]\n";
+        s += Helper_Data_Handler.color3("'7'")+" load file to register file , usage : [-o 7 <id> <path to new data>]\n";
 
-        s += "\033[0;36m'8' debug save current graph to xml , usage : [-o 8 <path to xml save>] \033[0;33m\n";
+        s += Helper_Data_Handler.color3("'8")+"\033[0;36m debug save current graph to xml , usage : [-o 8 <path to xml save>] \033[0;33m\n";
         s += "\n\nNote:<data> is represented in it's boolean for with MSB first and all bit seperated by a '.'\n";
         s += "example:\n0.0.1.1\nrepresents a binary 2 in a 4 bit wide wire\n\n";
         s += "Note: API commande line interface must be launshed \033[0;31m BEFORE \033[0;33m the simulator\n";
@@ -36,6 +52,7 @@ public class Commnade_Line {
     }
 
     public void opcode(String[] args) {
+        Helper_Data_Handler.colreset();
         int opcode;
         Vector<Integer> nvids;
         Vector<Data_Tuple> nvdata;

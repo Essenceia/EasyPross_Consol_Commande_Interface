@@ -16,6 +16,7 @@ public class Data_Tuple{
         this.id = Integer.parseInt(id);
         this.stringValues = newValue;
         boolValues = new Vector<>();
+        System.out.println(Helper_Data_Handler.color3(id)+":"+Helper_Data_Handler.color2(newValue));
         stringToBoolVector();
     }
     public Data_Tuple(Integer id, Vector<Boolean> newValue){

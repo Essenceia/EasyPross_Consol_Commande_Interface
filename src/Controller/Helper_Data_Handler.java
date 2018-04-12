@@ -64,7 +64,7 @@ public class Helper_Data_Handler {
     public static String creatIdString(Vector<Integer> Idwire){
         String nvmsg="";
         for (int i = 0; i < Idwire.size(); i++) {
-            nvmsg+= Idwire.get(i).toString();
+            nvmsg+= color3(Idwire.get(i).toString());
             if(i!= Idwire.size() - 1)nvmsg+=",";
         }
         return nvmsg;
@@ -82,7 +82,25 @@ public class Helper_Data_Handler {
         String val= "Values recived :\n";
         for (Data_Tuple data:toprint
              ) {
-            val+= "id "+data.getId()+"::"+data.getStringValues()+" \n";
+            val+= "id "+data.getId()+"::"+color2(data.getStringValues())+" \n";
         }
+    }
+    public static String color2(String s){
+        return "\033[0;36m"+s+"\033[0;33m";
+    }
+    public static String color3(String s){
+        return "\033[0;32m"+s+"\033[0;33m";
+    }
+
+    /**
+     * Print to RED
+     * @param s
+     * @return
+     */
+    public static String color1(String s){
+        return "\033[0;31m"+s+"\033[0;33m";
+    }
+    public static void colreset(){
+        System.out.print("\033[0;33m");
     }
 }
